@@ -312,6 +312,9 @@ exports[`PrimaryToolbar should render with data full config 1`] = `
           ]
         }
         onDelete={[MockFunction]}
+        onReset={[Function]}
+        resetButtonLabel="Reset filters"
+        showResetButton={false}
       />
     </ToolbarItem>
   </ToolbarContent>
@@ -593,6 +596,9 @@ exports[`PrimaryToolbar should render wrong actionsConfig 1`] = `
           ]
         }
         onDelete={[MockFunction]}
+        onReset={[Function]}
+        resetButtonLabel="Reset filters"
+        showResetButton={false}
       />
     </ToolbarItem>
   </ToolbarContent>
