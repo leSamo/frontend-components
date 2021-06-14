@@ -3,6 +3,7 @@ import { Alert, TextContent, Text, TextVariants, AlertActionCloseButton } from '
 import { CloseIcon } from '@patternfly/react-icons';
 import PropTypes from 'prop-types';
 import './notification.scss';
+import sanitizeHtml from 'sanitize-html';
 
 /**
  * Add some enter and dismiss animation later when PF has designs
@@ -42,7 +43,7 @@ export class Notification extends Component {
     }
 
     render() {
-        const { description, dismissable, onDismiss, dismissDelay, title, sentryId, requestId, autoDismiss, ...rest } = this.props;
+        const { description, dismissable, onDismiss, dismissDelay, title, sentryId, requestId, autoDismiss, escapeDescription, ...rest } = this.props;
         return (
             <Alert
                 className="notification-item"
@@ -60,7 +61,9 @@ export class Notification extends Component {
                 onMouseEnter={this.clearDismissTimeout}
                 onMouseLeave={this.setDismissTimeout}
             >
-                { (typeof description === 'string') ? description.replace(/<\/?[^>]+(>|$)/g, '') : description }
+                { (typeof description === 'string') ? (escapeDescription ? description.replace(/<\/?[^>]+(>|$)/g, '') :
+                    <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}/>) : description
+                }
                 {
                     sentryId && <TextContent>
                         <Text component={ TextVariants.small }>Tracking Id: { sentryId }</Text>
@@ -116,13 +119,18 @@ Notification.propTypes = {
     /**
      * Unique sentry error ID.
      */
-    sentryId: PropTypes.string
+    sentryId: PropTypes.string,
+    /**
+     * Flag to escape HTML tags inside notification description.
+     */
+    escapeDescription: PropTypes.bool
 };
 
 Notification.defaultProps = {
     dismissDelay: DEFAULT_DELAY,
     autoDismiss: true,
-    dismissable: true
+    dismissable: true,
+    escapeDescription: true
 };
 
 export default Notification;
